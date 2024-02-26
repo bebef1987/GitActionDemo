@@ -14,7 +14,6 @@ jobs:
               
       - name: Run uipcli tests
         id: set-matrix
-        shell: pwsh
         env:
             CLIENT_ID: ${{ secrets.CLIENT_ID }}
             CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
@@ -22,10 +21,7 @@ jobs:
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
             
-        run: |
-          $cmdOutput = (.\.github\workflows\test.ps1)
-          echo "matrix=$cmdOutput"
-          echo "matrix=$(jq -c . $cmdOutput)" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(jq -c . (.\.github\workflows\test.ps1))" >> $GITHUB_OUTPUT
        
   run_tests:
     needs: provide_packages_json

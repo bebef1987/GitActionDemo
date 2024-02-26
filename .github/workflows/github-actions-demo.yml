@@ -25,7 +25,7 @@ jobs:
         run: |
           $cmdOutput = (.\.github\workflows\test.ps1)
           echo "matrix=$cmdOutput"
-          echo "matrix=$cmdOutput" >> $GITHUB_OUTPUT
+          echo "matrix=$(jq -c . $cmdOutput)" >> $GITHUB_OUTPUT
        
   run_tests:
     needs: provide_packages_json

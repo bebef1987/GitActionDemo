@@ -79,5 +79,7 @@ foreach($item in $response.value) {
 
     $results += $result
 }
-$json = "{`"include`":$($results | ConvertTo-Json)}"
-echo "matrix=$($json| ConvertTo-Json)" 
+$json = "{
+    `"include`": $($results | ConvertTo-Json)
+}"
+echo "$($json)" 

@@ -70,12 +70,12 @@ foreach($item in $response.value) {
 	
     #echo "Name: $($item.Name)"
     #echo "OrganizationUnitId: $($item.OrganizationUnitId)"
-    #echo "OrganizationUnitId Name: $($response.FullyQualifiedName)"
+    #echo "OrganizationUnitIdName: $($response.FullyQualifiedName)"
 	
 	$result = New-Object PSObject
-    $result | Add-Member -Type NoteProperty -Name "Name" -Value $item.Name
-    $result | Add-Member -Type NoteProperty -Name "OrganizationUnitId" -Value $item.OrganizationUnitId
-    $result | Add-Member -Type NoteProperty -Name "OrganizationUnitName" -Value $response.FullyQualifiedName
+    $result | Add-Member -Type NoteProperty -Name "name" -Value $item.Name
+    $result | Add-Member -Type NoteProperty -Name "orgunitid" -Value $item.OrganizationUnitId
+    $result | Add-Member -Type NoteProperty -Name "orgunitname" -Value $response.FullyQualifiedName
 
     $results += $result
 }

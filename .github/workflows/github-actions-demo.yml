@@ -34,6 +34,31 @@ jobs:
       # ↓ the real magic happens here - create dynamic matrix from the json
       matrix: ${{ fromJson(needs.provide_packages_json.outputs.matrix) }}
     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v2
+
+       - name: Setup UiPath CLI
+         uses: Mikael-RnD/setup-uipath@v1.1.37
+         
+       - name: Run uipcli tests
+         shell: pwsh
+         run: echo ${{ matrix.orgunitid }}
+                
        - name: Run uipcli tests
          shell: pwsh
          run: echo ${{ matrix.name }}
+         
+       - name: Run uipcli tests
+         shell: pwsh
+         run: echo ${{ matrix.orgunitname }}
+      
+       - name: Run uipcli tests
+         shell: pwsh
+         env:
+            CLIENT_ID: ${{ secrets.CLIENT_ID }}
+            CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+            SCOPE: ${{ secrets.SCOPE }}
+            OR_TENANT: ${{ vars.OR_TENANT }}
+            ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
+            
+         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.name }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 1 --attachRobotLogs --result_path C:\test  --out junit  

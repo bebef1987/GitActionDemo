@@ -6,7 +6,5 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Setup UiPath CLI
-        uses: Mikael-RnD/setup-uipath@v1.0.0
-        with:
-          # Version of UiPath CLI to download
-          version: 23.10.8753.32995
+        uses: Mikael-RnD/setup-uipath@v1.1.37
+        

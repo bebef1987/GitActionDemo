@@ -82,4 +82,4 @@ foreach($item in $response.value) {
 $json = "{
     `"include`": $($results | ConvertTo-Json)
 }"
-echo "$($json)" 
+echo "$($json | ConvertFrom-Json | ConvertTo-Json -Compress -Depth 100)" 

@@ -14,6 +14,7 @@ jobs:
               
       - name: Run uipcli tests
         id: set-matrix
+        shell: pwsh
         env:
             CLIENT_ID: ${{ secrets.CLIENT_ID }}
             CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
@@ -21,15 +22,17 @@ jobs:
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
             
-        run: echo "matrix=$(jq -c . (.\.github\workflows\test.ps1))" >> $GITHUB_OUTPUT
+        run: |
+          $cmdOutput = (.\.github\workflows\test.ps1)
+          echo "matrix=$cmdOutput"
+          echo "::set-output name=matrix::$($cmdOutput)"
        
   run_tests:
     needs: provide_packages_json
     runs-on: self-hosted
     strategy:
       # ↓ the real magic happens here - create dynamic matrix from the json
-      matrix:
-        package: ${{ fromJson(needs.provide_packages_json.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.provide_packages_json.outputs.matrix) }}
     steps:
        - name: Run uipcli tests
          shell: pwsh

@@ -2,13 +2,18 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  provide_packages_json:
     runs-on: self-hosted
+    # here, we save the result of this 1st phase to the "outputs"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+            
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
               
       - name: Run uipcli tests
+        id: set-matrix
         shell: pwsh
         env:
             CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -17,4 +22,19 @@ jobs:
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
             
-        run: pwsh -File "$Env:GITHUB_WORKSPACE\.github\workflows\test.ps1"
+        run: |
+          $cmdOutput = (.\.github\workflows\test.ps1)
+          echo "matrix=$cmdOutput"
+          echo "matrix=$cmdOutput" >> $GITHUB_OUTPUT
+       
+  run_tests:
+    needs: provide_packages_json
+    runs-on: self-hosted
+    strategy:
+      # ↓ the real magic happens here - create dynamic matrix from the json
+      matrix:
+        package: ${{ fromJson(needs.provide_packages_json.outputs.matrix) }}
+    steps:
+       - name: Run uipcli tests
+         shell: pwsh
+         run: echo ${{ matrix.name }}

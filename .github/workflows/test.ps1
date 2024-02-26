@@ -37,12 +37,12 @@ param(
 
 $results = @()
 
-echo $org
-echo $tenant
-echo $filter
-echo $client_id
-echo $client_secret
-echo $scope
+#echo $org
+#echo $tenant
+#echo $filter
+#echo $client_id
+#echo $client_secret
+#echo $scope
 
 
 # Headers for the POST request to get the token
@@ -57,7 +57,7 @@ $body = @{
 }
 
 $token = Invoke-RestMethod -Method Post -Uri "https://cloud.uipath.com/identity_/connect/token" -Headers $headers -Body $body 
-echo $token.access_token
+#echo $token.access_token
 
 $headers.Clear()
 $headers.Add("accept", "application/json")
@@ -68,9 +68,9 @@ $response = Invoke-RestMethod -Method Get -Uri "https://cloud.uipath.com/$org/$t
 foreach($item in $response.value) {
 	$response = Invoke-RestMethod -Method Get -Uri "https://cloud.uipath.com/$org/$tenant/orchestrator_/odata/Folders($($item.OrganizationUnitId))" -Headers $headers
 	
-    echo "Name: $($item.Name)"
-    echo "OrganizationUnitId: $($item.OrganizationUnitId)"
-    echo "OrganizationUnitId Name: $($response.FullyQualifiedName)"
+    #echo "Name: $($item.Name)"
+    #echo "OrganizationUnitId: $($item.OrganizationUnitId)"
+    #echo "OrganizationUnitId Name: $($response.FullyQualifiedName)"
 	
 	$result = New-Object PSObject
     $result | Add-Member -Type NoteProperty -Name "Name" -Value $item.Name
@@ -79,5 +79,5 @@ foreach($item in $response.value) {
 
     $results += $result
 }
-
-return $results | ConvertTo-Json
+$json = "{`"include`":$($results | ConvertTo-Json)}"
+echo "matrix=$($json| ConvertTo-Json)" 

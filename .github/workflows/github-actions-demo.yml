@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   Explore-GitHub-Actions:
-    runs-on: self-hosted
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -13,5 +13,4 @@ jobs:
         
       - name: Run uipcli tests
         shell: pwsh
-        run: |
-        pwsh -File "$Env:GITHUB_WORKSPACE\.github\workflows\test.ps1"
+        run: pwsh -File "$Env:GITHUB_WORKSPACE\.github\workflows\test.ps1"

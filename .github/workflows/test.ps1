@@ -26,7 +26,7 @@ The filter to be applied on TestSet Names during the GET request to the TestSets
 
 # Declare parameters
 param(
-    [string]$client_id = ${{ secrets.CLIENT_ID }},
+    [string]$client_id = ${ secrets.CLIENT_ID },
     [string]$client_secret = ${{ secrets.CLIENT_SECRET }},
     [string]$scope = ${{ secrets.SCOPE }},
     [string]$org = ${{ env.ACCOUNTFORAPP }},

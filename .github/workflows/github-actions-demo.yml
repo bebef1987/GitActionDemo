@@ -7,14 +7,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-    
-      - name: Setup UiPath CLI
-        uses: Mikael-RnD/setup-uipath@v1.1.37
-        
+              
       - name: Run uipcli tests
         shell: pwsh
         env:
             CLIENT_ID: ${{ secrets.CLIENT_ID }}
-            CLIENT_SECRET: ${{ secrets.CLIENT_ID }}
+            CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
             SCOPE: ${{ secrets.SCOPE }}
+            OR_TENANT: ${{ vars.OR_TENANT }}
+            ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
+            
         run: pwsh -File "$Env:GITHUB_WORKSPACE\.github\workflows\test.ps1"

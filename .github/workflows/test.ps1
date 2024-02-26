@@ -26,17 +26,23 @@ The filter to be applied on TestSet Names during the GET request to the TestSets
 
 # Declare parameters
 param(
-    [string]$client_id = ${ env.CLIENT_ID },
-    [string]$client_secret = ${ env.CLIENT_SECRET },
-    [string]$scope = ${ env.SCOPE },
-    [string]$org = ${ env.ACCOUNTFORAPP },
-    [string]$tenant = ${ env.OR_TENANT },
+    [string]$client_id = $env:CLIENT_ID,
+    [string]$client_secret = $env:CLIENT_SECRET,
+    [string]$scope = $env:SCOPE,
+    [string]$org = $env:ACCOUNTFORAPP,
+    [string]$tenant = $env:OR_TENANT,
     [string]$filter = "RegTest"
 )
 
 
 $results = @()
 
+echo $org
+echo $tenant
+echo $filter
+echo $client_id
+echo $client_secret
+echo $scope
 
 
 # Headers for the POST request to get the token

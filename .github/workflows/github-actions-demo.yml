@@ -61,4 +61,18 @@ jobs:
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
             
-         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.name }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 1 --attachRobotLogs --result_path ".\TestResults\${{ matrix.name }}.xml"  --out junit  
+         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.name }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 1 --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.name }}.xml"  --out junit  
+
+       - name: Test Summary
+         uses: test-summary/action@v2
+         with:
+           paths: "TestResults/TEST-*.xml"
+           output: test-summary.md
+         if: always()
+
+       - name: Upload test summary
+         uses: actions/upload-artifact@v3
+         with:
+           name: test-summary
+           path: test-summary.md
+         if: always()

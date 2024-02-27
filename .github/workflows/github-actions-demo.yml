@@ -30,6 +30,7 @@ jobs:
   run_tests:
     name: Run test set ${{ matrix.testsetname }} in folder ${{ matrix.orgunitname }}
     needs: provide_packages_json
+    permissions: write-all
     runs-on: self-hosted
     strategy:
       # ↓ the real magic happens here - create dynamic matrix from the json

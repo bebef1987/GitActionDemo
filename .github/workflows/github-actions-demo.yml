@@ -50,7 +50,7 @@ jobs:
             SCOPE: ${{ secrets.SCOPE }}
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
-         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.testsetname }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 3 --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.testsetname }}.xml"  --out junit  
+         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.testsetname }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel Verbose --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.testsetname }}.xml"  --out junit  
 
        - name: Generate Test Report
          uses: dorny/test-reporter@v1

@@ -1,5 +1,5 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is testing out UiPath tests with GitHub Actions 🚀
 on: [push]
 jobs:
   provide_packages_json:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
               
-      - name: Run uipcli tests
+      - name: Run script to create test matrix
         id: set-matrix
         shell: pwsh
         env:
@@ -23,11 +23,12 @@ jobs:
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
             
         run: |
-          $cmdOutput = (.\.github\workflows\test.ps1)
+          $cmdOutput = (.\getTestSets.ps1)
           echo "matrix=$cmdOutput"
           echo "::set-output name=matrix::$($cmdOutput)"
        
   run_tests:
+    name: Run test set ${{ matrix.testsetname }} in folder ${{ matrix.orgunitname }}
     needs: provide_packages_json
     runs-on: self-hosted
     strategy:
@@ -40,19 +41,8 @@ jobs:
        - name: Setup UiPath CLI
          uses: Mikael-RnD/setup-uipath@v1.1.37
          
-       - name: Run uipcli tests
-         shell: pwsh
-         run: echo ${{ matrix.orgunitid }}
-                
-       - name: Run uipcli tests
-         shell: pwsh
-         run: echo ${{ matrix.name }}
-         
-       - name: Run uipcli tests
-         shell: pwsh
-         run: echo ${{ matrix.orgunitname }}
       
-       - name: Run uipcli tests
+       - name: Run UiPath Test Set 
          shell: pwsh
          env:
             CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -61,7 +51,7 @@ jobs:
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
             
-         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.name }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 1 --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.name }}.xml"  --out junit  
+         run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.testsetname }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 1 --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.testsetname }}.xml"  --out junit  
 
        - name: Test Summary
          uses: test-summary/action@v2

@@ -53,16 +53,13 @@ jobs:
             
          run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.testsetname }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel 1 --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.testsetname }}.xml"  --out junit  
 
-       - name: Test Summary
-         uses: test-summary/action@v2
-         with:
-           paths: "TestResults/TEST-*.xml"
-           output: test-summary.md
-         if: always()
 
-       - name: Upload test summary
-         uses: actions/upload-artifact@v3
+
+       - name: Test Report
+         uses: dorny/test-reporter@v1
+         if: success() || failure()    # run this step even if previous step failed
          with:
-           name: test-summary
-           path: test-summary.md
-         if: always()
+           name: UiPath Tests            # Name of the check run which will be created
+           path: TestResults/TEST--*.xml    # Path to test results
+           reporter: java-junit        # Format of test results
+           

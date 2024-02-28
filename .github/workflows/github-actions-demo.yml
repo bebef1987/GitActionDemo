@@ -21,7 +21,7 @@ jobs:
             SCOPE: ${{ secrets.SCOPE }}
             OR_TENANT: ${{ vars.OR_TENANT }}
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
-            OR_URL: ${{ vars.ACCOUNTFORAPP }}
+            OR_URL: ${{ vars.OR_URL }}
             
         run: |
           $cmdOutput = (.\getTestSets.ps1)

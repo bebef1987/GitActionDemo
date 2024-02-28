@@ -31,6 +31,7 @@ param(
     [string]$scope = $env:SCOPE,
     [string]$org = $env:ACCOUNTFORAPP,
     [string]$tenant = $env:OR_TENANT,
+    [string]$orchurl = $env:OR_URL,
     [string]$filter = "RegTest"
 )
 
@@ -56,17 +57,17 @@ $body = @{
     "scope" = $scope
 }
 
-$token = Invoke-RestMethod -Method Post -Uri "https://cloud.uipath.com/identity_/connect/token" -Headers $headers -Body $body 
+$token = Invoke-RestMethod -Method Post -Uri "https://$orchurl/identity_/connect/token" -Headers $headers -Body $body 
 #echo $token.access_token
 
 $headers.Clear()
 $headers.Add("accept", "application/json")
 $headers.Add("authorization", "Bearer "+$token.access_token)
 
-$response = Invoke-RestMethod -Method Get -Uri "https://cloud.uipath.com/$org/$tenant/orchestrator_/odata/TestSets?%24filter=startswith(Name%2C%20%27$filter%27)" -Headers $headers
+$response = Invoke-RestMethod -Method Get -Uri "https://$orchurl/$org/$tenant/orchestrator_/odata/TestSets?%24filter=startswith(Name%2C%20%27$filter%27)" -Headers $headers
 	
 foreach($item in $response.value) {
-	$response = Invoke-RestMethod -Method Get -Uri "https://cloud.uipath.com/$org/$tenant/orchestrator_/odata/Folders($($item.OrganizationUnitId))" -Headers $headers
+	$response = Invoke-RestMethod -Method Get -Uri "https://$orchurl/$org/$tenant/orchestrator_/odata/Folders($($item.OrganizationUnitId))" -Headers $headers
 	
     #echo "Name: $($item.Name)"
     #echo "OrganizationUnitId: $($item.OrganizationUnitId)"
@@ -79,6 +80,10 @@ foreach($item in $response.value) {
 
     $results += $result
 }
+
+
+
+
 $json = "{
     `"include`": $($results | ConvertTo-Json)
 }"

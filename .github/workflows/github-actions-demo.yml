@@ -54,7 +54,7 @@ jobs:
          run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.testsetname }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel Verbose --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.testsetname }}.xml"  --out junit  
 
        - name: Upload test result
-         uses: actions/upload-artifact@v2
+         uses: actions/upload-artifact@v4
          if: always() # This makes sure the step always runs, even if the prior step fails.
          with:
            name: junit-results-${{ matrix.testsetname }}

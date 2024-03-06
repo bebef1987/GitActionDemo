@@ -57,7 +57,7 @@ jobs:
          uses: actions/upload-artifact@v2
          if: always() # This makes sure the step always runs, even if the prior step fails.
          with:
-           name: junit-results-${{ matrix.testsetname }}-${{ matrix.orgunitname }}
+           name: junit-results-${{ matrix.testsetname }}
            path: TestResults/TEST-*.xml
            
   merge-results:

@@ -63,7 +63,10 @@ jobs:
   merge-results:
     needs: run_tests
     runs-on: ubuntu-latest
-  
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

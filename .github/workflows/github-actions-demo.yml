@@ -57,7 +57,7 @@ jobs:
          uses: actions/upload-artifact@v2
          if: always() # This makes sure the step always runs, even if the prior step fails.
          with:
-           name: junit-results-${{ matrix.node-version }}
+           name: junit-results-${{ matrix.testsetname }}-${{ matrix.orgunitname }}
            path: TestResults/TEST-*.xml
            
   merge-results:
@@ -73,6 +73,6 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: Test Report for Test Set ${{ matrix.testsetname }} in folder ${{ matrix.orgunitname }}            # Name of the check run which will be created
-          path: TEST-*.xml    # Path to test results
+          path: ./TestResults/TEST-*.xml    # Path to test results
           reporter: java-junit        # Format of test results
            

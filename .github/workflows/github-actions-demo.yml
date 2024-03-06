@@ -53,11 +53,26 @@ jobs:
             ACCOUNTFORAPP: ${{ vars.ACCOUNTFORAPP }}
          run: uipcli.exe test run "https://cloud.uipath.com/" ${{env.OR_TENANT}} --accountForApp ${{env.ACCOUNTFORAPP}} --applicationId ${{env.CLIENT_ID}} --applicationSecret "${{env.CLIENT_SECRET}}" --applicationScope "${{env.SCOPE}}" --testset ${{ matrix.testsetname }} --organizationUnit ${{ matrix.orgunitname }} --traceLevel Verbose --attachRobotLogs --result_path ".\TestResults\TEST-${{ matrix.testsetname }}.xml"  --out junit  
 
-       - name: Generate Test Report
-         uses: dorny/test-reporter@v1
-         if: success() || failure()    # run this step even if previous step failed
+       - name: Upload test result
+         uses: actions/upload-artifact@v2
+         if: always() # This makes sure the step always runs, even if the prior step fails.
          with:
-           name: Test Report for Test Set ${{ matrix.testsetname }} in folder ${{ matrix.orgunitname }}            # Name of the check run which will be created
-           path: TestResults/TEST-*.xml    # Path to test results
-           reporter: java-junit        # Format of test results
+           name: junit-results-${{ matrix.node-version }}
+           path: TestResults/TEST-*.xml
+           
+  merge-results:
+    needs: run_tests
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Generate Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Test Report for Test Set ${{ matrix.testsetname }} in folder ${{ matrix.orgunitname }}            # Name of the check run which will be created
+          path: TEST-*.xml    # Path to test results
+          reporter: java-junit        # Format of test results
            

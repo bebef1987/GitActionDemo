@@ -85,4 +85,10 @@ jobs:
           name: Test Report for Test Set ${{ matrix.testsetname }} in folder ${{ matrix.orgunitname }}            # Name of the check run which will be created
           path: ./TestResults/**/TEST-*.xml    # Path to test results
           reporter: java-junit        # Format of test results
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+         files: ./TestResults/**/TEST-*.xml 
            

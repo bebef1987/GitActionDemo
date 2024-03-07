@@ -91,4 +91,7 @@ jobs:
         if: always()
         with:
          files: ./TestResults/**/TEST-*.xml 
+         report_individual_runs: true
+         report_suite_logs: any
+         
            
